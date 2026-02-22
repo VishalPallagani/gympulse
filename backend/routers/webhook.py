@@ -201,8 +201,14 @@ async def _handle_weight_log(phone_number: str, user_id: str, weight_kg: Any) ->
             "That weight looks out of range. Send it like 'weight 78.4kg'.",
         )
         return
-    except Exception:
+    except Exception as exc:
         logger.exception("Failed to save body weight for user %s", user_id)
+        if "404" in str(exc):
+            await send_text(
+                phone_number,
+                "Weight tracking is not fully enabled yet on the server. Please ask admin to run the latest database schema migration.",
+            )
+            return
         await send_text(
             phone_number,
             "I could not save your weight right now. Please try again in a moment.",
@@ -215,7 +221,7 @@ async def _handle_weight_log(phone_number: str, user_id: str, weight_kg: Any) ->
     delta_7d = summary.get("delta_7d_kg")
     adherence = summary.get("adherence_30d_pct")
 
-    lines = [f"✅ Bodyweight logged: {_format_weight(latest_weight)} kg"]
+    lines = [f"\u2705 Bodyweight logged: {_format_weight(latest_weight)} kg"]
     if delta_last is not None:
         lines.append(f"Compared to last log: {_format_delta(delta_last)} kg")
     if delta_7d is not None:
@@ -327,7 +333,10 @@ async def _handle_text_message(phone_number: str, message_text: str, display_nam
         except ParserError:
             await send_text(
                 phone_number,
-                "I couldn't parse that workout yet. Please rephrase like: 'bench 80kg 4x8, dips 3x12'.",
+                "I couldn't parse that workout yet. Try one of these:\n"
+                "- bench 80kg 4x8, dips 3x12\n"
+                "- i did 30kg bench press\n"
+                "- bench 30kg x12, 35kg x10, 40kg x8",
             )
             should_prompt_weight = False
             parsed = None

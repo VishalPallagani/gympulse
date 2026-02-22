@@ -128,6 +128,11 @@ class ParserError(RuntimeError):
     pass
 
 
+def _build_prompt(user_message: str) -> str:
+    # Use plain replacement to avoid formatting collisions with literal JSON braces.
+    return PROMPT_TEMPLATE.replace("{user_message}", user_message)
+
+
 def _extract_json_block(text: str) -> str:
     stripped = str(text or "").strip()
     if stripped.startswith("```"):
@@ -439,7 +444,7 @@ async def _parse_with_gemini(user_message: str) -> list[dict[str, Any]] | dict[s
     if not GEMINI_API_KEY:
         raise ParserError("Gemini API key is not configured.")
 
-    prompt = PROMPT_TEMPLATE.format(user_message=user_message)
+    prompt = _build_prompt(user_message)
     url = f"{GEMINI_API_BASE}/v1beta/models/{GEMINI_MODEL}:generateContent"
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
@@ -469,7 +474,7 @@ async def _parse_with_gemini(user_message: str) -> list[dict[str, Any]] | dict[s
 
 
 async def _parse_with_ollama(user_message: str) -> list[dict[str, Any]] | dict[str, Any]:
-    prompt = PROMPT_TEMPLATE.format(user_message=user_message)
+    prompt = _build_prompt(user_message)
     url = f"{OLLAMA_BASE_URL}/api/generate"
     payload = {
         "model": OLLAMA_MODEL,

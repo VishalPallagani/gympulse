@@ -317,6 +317,7 @@ async def get_or_create_user(phone_number: str, name: str | None = None) -> tupl
         "Welcome to GymPulse! \U0001F4AA Just text me your workout like you'd tell a friend. "
         "Example: 'chest day - bench 80kg 4x8, incline DB 22.5kg 3x10'. "
         f"Here's your personal dashboard: {_dashboard_url(user['dashboard_token'])}. Bookmark it!\n\n"
+        "Flexible formats work too, like: 'i did 30kg bench press' or 'bench 30kg x12, 35kg x10, 40kg x8'.\n\n"
         "Quick commands:\n"
         "- dashboard\n"
         "- stats\n"
