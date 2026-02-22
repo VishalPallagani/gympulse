@@ -16,7 +16,10 @@ load_dotenv()
 
 app = FastAPI(title="GymPulse API", version="1.0.0")
 
-frontend_url = os.getenv("FRONTEND_URL") or "http://localhost:5173"
+_raw_frontend_url = (os.getenv("FRONTEND_URL") or "http://localhost:5173").strip()
+if _raw_frontend_url and "://" not in _raw_frontend_url:
+    _raw_frontend_url = f"https://{_raw_frontend_url}"
+frontend_url = _raw_frontend_url.rstrip("/")
 
 app.add_middleware(
     CORSMiddleware,

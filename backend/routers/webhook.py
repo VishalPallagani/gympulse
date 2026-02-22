@@ -33,7 +33,10 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["webhook"])
 
 WHATSAPP_VERIFY_TOKEN = os.getenv("WHATSAPP_VERIFY_TOKEN", "")
-FRONTEND_URL = os.getenv("FRONTEND_URL") or "http://localhost:5173"
+_raw_frontend_url = (os.getenv("FRONTEND_URL") or "http://localhost:5173").strip()
+if _raw_frontend_url and "://" not in _raw_frontend_url:
+    _raw_frontend_url = f"https://{_raw_frontend_url}"
+FRONTEND_URL = _raw_frontend_url.rstrip("/")
 
 
 def _format_int(value: Any) -> str:

@@ -18,7 +18,10 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["payments"])
-FRONTEND_URL = os.getenv("FRONTEND_URL") or "http://localhost:5173"
+_raw_frontend_url = (os.getenv("FRONTEND_URL") or "http://localhost:5173").strip()
+if _raw_frontend_url and "://" not in _raw_frontend_url:
+    _raw_frontend_url = f"https://{_raw_frontend_url}"
+FRONTEND_URL = _raw_frontend_url.rstrip("/")
 
 
 def _dashboard_url(token: str) -> str:

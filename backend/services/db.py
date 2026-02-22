@@ -15,7 +15,11 @@ logger = logging.getLogger(__name__)
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
-FRONTEND_URL = os.getenv("FRONTEND_URL") or "http://localhost:5173"
+
+_raw_frontend_url = (os.getenv("FRONTEND_URL") or "http://localhost:5173").strip()
+if _raw_frontend_url and "://" not in _raw_frontend_url:
+    _raw_frontend_url = f"https://{_raw_frontend_url}"
+FRONTEND_URL = _raw_frontend_url.rstrip("/")
 PRO_MONTHLY_PRICE_INR = 99
 
 PRO_ACTIVE_STATUSES = {"active"}
