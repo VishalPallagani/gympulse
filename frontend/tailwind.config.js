@@ -9,12 +9,12 @@ export default {
         surface: '#0D1118',
         panel: '#121826',
         chrome: '#1C2433',
-        accent: '#5AC8FA',
-        accentStrong: '#2EA8FF',
-        blaze: '#F59E0B',
+        accent: '#FF4FD8',
+        accentStrong: '#FF22C2',
+        blaze: '#FFB703',
         cyan: '#22D3EE',
-        violet: '#A78BFA',
-        mint: '#34D399',
+        violet: '#8B5CF6',
+        mint: '#2EE6A6',
         rose: '#FB7185',
         orange: '#F97316',
         adminAccent: '#A855F7'
@@ -27,7 +27,7 @@ export default {
       },
       boxShadow: {
         card: '0 18px 48px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.05)',
-        glow: '0 0 0 1px rgba(90,200,250,0.25), 0 0 42px rgba(90,200,250,0.22)',
+        glow: '0 0 0 1px rgba(255,79,216,0.28), 0 0 42px rgba(255,79,216,0.24)',
         violetGlow: '0 0 0 1px rgba(168,85,247,0.3), 0 0 30px rgba(168,85,247,0.25)'
       },
       keyframes: {
@@ -44,8 +44,8 @@ export default {
           '100%': { opacity: '1', transform: 'translateY(0)' }
         },
         pulseSoft: {
-          '0%,100%': { boxShadow: '0 0 0 0 rgba(90,200,250,0.25)' },
-          '50%': { boxShadow: '0 0 0 8px rgba(90,200,250,0)' }
+          '0%,100%': { boxShadow: '0 0 0 0 rgba(255,79,216,0.25)' },
+          '50%': { boxShadow: '0 0 0 8px rgba(255,79,216,0)' }
         }
       },
       animation: {

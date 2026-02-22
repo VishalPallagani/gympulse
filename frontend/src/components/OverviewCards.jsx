@@ -12,10 +12,10 @@ function StatCard({ label, value, footnote, tone = 'accent' }) {
   };
 
   return (
-    <article className="soft-ring apple-card p-5 transition hover:-translate-y-1">
-      <p className={`font-display text-4xl font-bold tracking-tight md:text-5xl ${toneMap[tone] || 'text-accent'}`}>{value}</p>
-      <p className="mt-2 text-xs uppercase tracking-[0.18em] text-zinc-400">{label}</p>
-      <p className="mt-3 text-sm text-zinc-300">{footnote}</p>
+    <article className="soft-ring apple-card p-4 transition hover:-translate-y-1 sm:p-5">
+      <p className={`font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl ${toneMap[tone] || 'text-accent'}`}>{value}</p>
+      <p className="mt-2 text-[10px] uppercase tracking-[0.16em] text-zinc-400 sm:text-xs sm:tracking-[0.18em]">{label}</p>
+      <p className="mt-3 text-xs text-zinc-300 sm:text-sm">{footnote}</p>
     </article>
   );
 }
@@ -31,7 +31,7 @@ export default function OverviewCards({ summary, quickStats }) {
   const weightNote = latestWeight ? `${Number(latestWeight).toFixed(1)}kg latest bodyweight.` : 'No bodyweight logs yet.';
 
   return (
-    <section id="overview" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <section id="overview" className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
       <StatCard label="Total Sessions" value={totalSessions} tone="accent" footnote={`Strongest day: ${strongestDay}`} />
       <StatCard label="Total Volume Lifted" value={formatTonnes(totalTonnes)} tone="mint" footnote="Cumulative tonnage moved." />
       <StatCard label="Current Streak" value={`${currentStreak}d`} tone="violet" footnote={`Current focus: ${mostTrained}`} />

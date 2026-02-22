@@ -19,11 +19,18 @@ body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: #f8fafc;
   background:
-    radial-gradient(circle at 12% 8%, rgba(90, 200, 250, 0.2), transparent 34%),
-    radial-gradient(circle at 88% 10%, rgba(167, 139, 250, 0.16), transparent 34%),
-    radial-gradient(circle at 80% 86%, rgba(249, 115, 22, 0.13), transparent 36%),
-    radial-gradient(circle at 44% 120%, rgba(52, 211, 153, 0.12), transparent 38%),
+    radial-gradient(circle at 12% 8%, rgba(255, 79, 216, 0.22), transparent 34%),
+    radial-gradient(circle at 88% 10%, rgba(139, 92, 246, 0.2), transparent 34%),
+    radial-gradient(circle at 80% 86%, rgba(34, 211, 238, 0.16), transparent 36%),
+    radial-gradient(circle at 44% 120%, rgba(46, 230, 166, 0.14), transparent 38%),
     #04050a;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -81,7 +88,7 @@ body::after {
   inset: -65% auto auto -35%;
   width: 70%;
   aspect-ratio: 1 / 1;
-  background: radial-gradient(circle, rgba(90, 200, 250, 0.18), transparent 72%);
+  background: radial-gradient(circle, rgba(255, 79, 216, 0.2), transparent 72%);
   pointer-events: none;
 }
 
@@ -91,7 +98,7 @@ body::after {
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgba(90, 200, 250, 0.45);
+  background: rgba(255, 79, 216, 0.45);
   border-radius: 9999px;
 }
 
@@ -141,5 +148,11 @@ body::after {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .apple-card {
+    border-radius: 16px;
   }
 }

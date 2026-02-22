@@ -24,7 +24,7 @@ const NAV_ITEMS = [
   { id: 'heatmap', label: 'Streak' },
   { id: 'medals', label: 'Medals' },
   { id: 'sessions', label: 'Sessions' },
-  { id: 'story', label: 'Story' }
+  { id: 'story', label: 'Share' }
 ];
 
 function ScrollNav({ mobile = false }) {
@@ -32,18 +32,18 @@ function ScrollNav({ mobile = false }) {
     <nav
       className={
         mobile
-          ? 'fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-ink/88 px-2 py-2 backdrop-blur lg:hidden'
+          ? 'fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-ink/90 px-2 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] backdrop-blur lg:hidden'
           : 'sticky top-6 hidden h-fit rounded-2xl apple-card p-4 lg:block'
       }
     >
-      <ul className={mobile ? 'flex items-center gap-2 overflow-x-auto text-xs' : 'space-y-2'}>
+      <ul className={mobile ? 'scrollbar-thin flex items-center gap-2 overflow-x-auto pr-1 text-xs' : 'space-y-2'}>
         {NAV_ITEMS.map((item) => (
           <li key={item.id}>
             <a
               href={`#${item.id}`}
               className={
                 mobile
-                  ? 'block whitespace-nowrap rounded-xl border border-white/10 px-3 py-2 text-zinc-300 transition hover:border-accent/60 hover:text-white'
+                  ? 'block whitespace-nowrap rounded-xl border border-white/10 px-2.5 py-1.5 text-[11px] text-zinc-300 transition hover:border-accent/60 hover:text-white'
                   : 'block rounded-xl px-3 py-2 text-sm font-medium text-zinc-300 transition hover:bg-white/5 hover:text-white'
               }
             >
@@ -58,17 +58,17 @@ function ScrollNav({ mobile = false }) {
 
 function LoadingSkeleton() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-ink p-6 text-white">
+    <div className="relative min-h-screen overflow-hidden bg-ink p-4 text-white sm:p-6">
       <div className="grid-noise absolute inset-0" />
       <div className="relative mx-auto max-w-7xl space-y-6">
-        <div className="h-44 animate-pulse rounded-3xl bg-white/5" />
+        <div className="h-36 animate-pulse rounded-3xl bg-white/5 sm:h-44" />
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="h-32 animate-pulse rounded-2xl bg-white/5" />
+            <div key={index} className="h-28 animate-pulse rounded-2xl bg-white/5 sm:h-32" />
           ))}
         </div>
         {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="h-80 animate-pulse rounded-2xl bg-white/5" />
+          <div key={index} className="h-64 animate-pulse rounded-2xl bg-white/5 sm:h-80" />
         ))}
       </div>
     </div>
@@ -77,7 +77,7 @@ function LoadingSkeleton() {
 
 function LockedPaywall({ paymentUrl }) {
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-6 py-10 text-white">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-4 py-6 text-white sm:px-6 sm:py-10">
       <div className="absolute inset-0">
         <div className="absolute -left-16 top-12 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
         <div className="absolute right-0 top-6 h-72 w-72 rounded-full bg-violet/25 blur-3xl" />
@@ -86,36 +86,36 @@ function LockedPaywall({ paymentUrl }) {
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center px-4">
-        <div className="w-full max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-8 blur-[1px]">
+        <div className="w-full max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-4 blur-[1px] sm:p-8">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div className="h-44 rounded-2xl bg-white/10" />
-            <div className="h-44 rounded-2xl bg-white/10" />
-            <div className="h-44 rounded-2xl bg-white/10" />
-            <div className="h-60 rounded-2xl bg-white/10 md:col-span-2" />
-            <div className="h-60 rounded-2xl bg-white/10" />
+            <div className="h-28 rounded-2xl bg-white/10 sm:h-44" />
+            <div className="h-28 rounded-2xl bg-white/10 sm:h-44" />
+            <div className="h-28 rounded-2xl bg-white/10 sm:h-44" />
+            <div className="h-44 rounded-2xl bg-white/10 sm:h-60 md:col-span-2" />
+            <div className="h-44 rounded-2xl bg-white/10 sm:h-60" />
           </div>
         </div>
       </div>
 
-      <section className="relative z-10 w-full max-w-2xl rounded-3xl border border-white/15 bg-[#0C1018]/90 p-8 shadow-card backdrop-blur-xl">
-        <p className="text-center font-display text-4xl font-bold tracking-tight text-accent">GymPulse</p>
-        <h1 className="mt-5 text-center font-display text-4xl leading-tight text-white md:text-5xl">
+      <section className="relative z-10 w-full max-w-2xl rounded-3xl border border-white/15 bg-[#0C1018]/90 p-5 shadow-card backdrop-blur-xl sm:p-8">
+        <p className="text-center font-display text-3xl font-bold tracking-tight text-accent sm:text-4xl">GymPulse</p>
+        <h1 className="mt-5 text-center font-display text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
           Your gains deserve better than a spreadsheet.
         </h1>
-        <p className="mt-4 text-center text-zinc-300">
-          Unlock your personal dashboard with advanced charts, story cards, medals and full workout history.
+        <p className="mt-4 text-center text-sm text-zinc-300 sm:text-base">
+          Unlock your personal dashboard with advanced charts, share drops, medals and full workout history.
         </p>
 
-        <ul className="mt-7 space-y-3 text-zinc-100">
+        <ul className="mt-7 space-y-3 text-sm text-zinc-100 sm:text-base">
           {[
             'Full dashboard and premium charts',
             'Progressive overload tracking',
-            'Weekly story cards',
+            'Weekly share drops',
             'Achievement medals',
             'Full workout history'
           ].map((item) => (
             <li key={item} className="flex items-center gap-3">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/20 text-accent">✓</span>
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/20 text-accent">{String.fromCharCode(10003)}</span>
               <span>{item}</span>
             </li>
           ))}
@@ -123,7 +123,7 @@ function LockedPaywall({ paymentUrl }) {
 
         <button
           type="button"
-          className="mt-8 w-full rounded-2xl bg-accent px-6 py-4 text-lg font-bold text-white shadow-glow transition hover:bg-accentStrong disabled:cursor-not-allowed disabled:opacity-70"
+          className="mt-8 w-full rounded-2xl bg-accent px-6 py-3.5 text-base font-bold text-white shadow-glow transition hover:bg-accentStrong disabled:cursor-not-allowed disabled:opacity-70 sm:text-lg"
           onClick={() => paymentUrl && window.open(paymentUrl, '_blank', 'noopener,noreferrer')}
           disabled={!paymentUrl}
         >
@@ -207,6 +207,7 @@ export default function Dashboard() {
   const stats = dashboardData?.stats;
   const summary = stats?.summary;
   const sessionCount = useMemo(() => exerciseData?.history?.length || 0, [exerciseData]);
+  const athleteName = dashboardData?.user?.name?.trim() || null;
 
   if (loading) {
     return <LoadingSkeleton />;
@@ -228,24 +229,24 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-ink pb-24 text-white">
+    <div className="relative min-h-screen overflow-x-hidden bg-ink pb-[calc(6.5rem+env(safe-area-inset-bottom))] text-white lg:pb-10">
       <div className="grid-noise absolute inset-0" />
       <div className="pointer-events-none absolute -left-16 top-10 h-72 w-72 animate-float rounded-full bg-accent/18 blur-3xl" />
       <div className="pointer-events-none absolute bottom-8 right-4 h-72 w-72 animate-float rounded-full bg-violet/18 blur-3xl" />
 
-      <div className="relative mx-auto grid w-full max-w-7xl gap-6 px-4 pb-10 pt-6 lg:grid-cols-[250px_1fr] lg:px-6">
+      <div className="relative mx-auto grid w-full max-w-7xl gap-5 px-3 pb-8 pt-4 sm:px-4 sm:pb-10 sm:pt-6 lg:grid-cols-[250px_1fr] lg:px-6">
         <ScrollNav />
 
-        <main className="space-y-6 fade-seq">
-          <header className="apple-card relative overflow-hidden p-6">
+        <main className="fade-seq min-w-0 space-y-5 sm:space-y-6">
+          <header className="apple-card relative overflow-hidden p-5 sm:p-6">
             <div className="absolute -right-8 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-accent/18 blur-2xl" />
             <div className="absolute -left-12 -top-10 h-44 w-44 rounded-full bg-violet/25 blur-3xl" />
-            <p className="text-xs uppercase tracking-[0.28em] text-zinc-400">Athlete Intelligence</p>
-            <h1 className="mt-2 max-w-3xl font-display text-4xl font-bold leading-tight text-white md:text-5xl">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400 sm:text-xs sm:tracking-[0.28em]">Athlete Intelligence</p>
+            <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
               Performance Command Center
             </h1>
-            <p className="mt-3 text-zinc-300">
-              Athlete {dashboardData.user?.phone_number || 'Unknown'} | {sessionCount} total sets logged
+            <p className="mt-3 text-sm text-zinc-300 sm:text-base">
+              Athlete {athleteName || dashboardData.user?.phone_number || 'Unknown'} | {sessionCount} total sets logged
             </p>
             <p className="mt-2 text-sm text-zinc-400">
               Coach-grade telemetry from simple WhatsApp messages: training stress, progression, bodyweight trend, and balance.
@@ -261,7 +262,7 @@ export default function Dashboard() {
           <HeatmapCalendar heatmapData={stats.heatmap} />
           <MedalsGrid medals={medalsData?.all_medals || []} />
           <SessionsFeed sessions={stats.recent_sessions} />
-          <StoryCard token={token} apiBase={API_BASE} summary={summary} quickStats={stats.quick_stats} />
+          <StoryCard summary={summary} quickStats={stats.quick_stats} />
         </main>
       </div>
 
@@ -269,3 +270,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

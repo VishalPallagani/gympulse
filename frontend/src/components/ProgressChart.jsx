@@ -24,24 +24,24 @@ export default function ProgressChart({ progress }) {
 
   if (!exerciseNames.length) {
     return (
-      <section id="progress" className="apple-card p-6">
-        <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Progressive Overload</h2>
+      <section id="progress" className="apple-card p-4 sm:p-6">
+        <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Progressive Overload</h2>
         <p className="mt-4 text-zinc-400">Log weighted exercises to unlock your strength trendline.</p>
       </section>
     );
   }
 
   return (
-    <section id="progress" className="apple-card p-6">
+    <section id="progress" className="apple-card p-4 sm:p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Progressive Overload</h2>
+          <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Progressive Overload</h2>
           <p className="mt-1 text-sm text-zinc-400">Smoothed max load curve for each exercise.</p>
         </div>
         <select
           value={activeExercise}
           onChange={(event) => setSelectedExercise(event.target.value)}
-          className="rounded-xl border border-white/10 bg-panel px-3 py-2 text-sm text-zinc-100 focus:border-accent focus:outline-none"
+          className="w-full rounded-xl border border-white/10 bg-panel px-3 py-2 text-sm text-zinc-100 focus:border-accent focus:outline-none md:w-auto"
         >
           {exerciseNames.map((name) => (
             <option key={name} value={name}>
@@ -66,20 +66,20 @@ export default function ProgressChart({ progress }) {
         </p>
       ) : null}
 
-      <div className="mt-6 h-80 w-full">
+      <div className="mt-6 h-64 w-full sm:h-80">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={lineData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="progressFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#5AC8FA" stopOpacity={0.42} />
-                <stop offset="95%" stopColor="#5AC8FA" stopOpacity={0.02} />
+                <stop offset="5%" stopColor="#FF4FD8" stopOpacity={0.42} />
+                <stop offset="95%" stopColor="#FF4FD8" stopOpacity={0.02} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
-            <XAxis dataKey="date" tickFormatter={formatDate} stroke="#A1A1AA" tick={{ fontSize: 12 }} />
+            <XAxis dataKey="date" tickFormatter={formatDate} stroke="#A1A1AA" tick={{ fontSize: 11 }} minTickGap={22} />
             <YAxis stroke="#A1A1AA" tick={{ fontSize: 12 }} unit="kg" />
             <Tooltip
-              cursor={{ stroke: '#5AC8FA', strokeWidth: 1 }}
+              cursor={{ stroke: '#FF4FD8', strokeWidth: 1 }}
               contentStyle={{
                 background: 'rgba(7,10,16,0.96)',
                 border: '1px solid rgba(255,255,255,0.1)',
@@ -91,12 +91,12 @@ export default function ProgressChart({ progress }) {
             <Area
               type="monotone"
               dataKey="max_weight"
-              stroke="#5AC8FA"
+              stroke="#FF4FD8"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#progressFill)"
-              dot={{ fill: '#5AC8FA', strokeWidth: 0, r: 3 }}
-              activeDot={{ r: 5, fill: '#A78BFA' }}
+              dot={{ fill: '#FF4FD8', strokeWidth: 0, r: 3 }}
+              activeDot={{ r: 5, fill: '#22D3EE' }}
             />
           </AreaChart>
         </ResponsiveContainer>

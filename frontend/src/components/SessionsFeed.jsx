@@ -13,23 +13,23 @@ export default function SessionsFeed({ sessions }) {
 
   if (!sessions?.length) {
     return (
-      <section id="sessions" className="apple-card p-6">
-        <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Recent Sessions</h2>
+      <section id="sessions" className="apple-card p-4 sm:p-6">
+        <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Recent Sessions</h2>
         <p className="mt-4 text-zinc-400">No sessions logged yet.</p>
       </section>
     );
   }
 
   return (
-    <section id="sessions" className="apple-card p-6">
-      <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Recent Sessions</h2>
+    <section id="sessions" className="apple-card p-4 sm:p-6">
+      <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Recent Sessions</h2>
       <p className="mt-1 text-sm text-zinc-400">Latest 10 sessions with expandable exercise detail.</p>
 
       <div className="mt-6 space-y-3">
         {sessions.map((session) => {
           const isOpen = openSessionId === session.id;
           return (
-            <article key={session.id} className="rounded-xl border border-white/10 bg-black/20 p-4 transition hover:border-accent/40">
+            <article key={session.id} className="rounded-xl border border-white/10 bg-black/20 p-3 transition hover:border-accent/40 sm:p-4">
               <button
                 type="button"
                 onClick={() => setOpenSessionId(isOpen ? null : session.id)}
@@ -39,12 +39,12 @@ export default function SessionsFeed({ sessions }) {
                   <p className="text-xs uppercase tracking-[0.14em] text-zinc-400">
                     {dayjs(session.logged_at).format('ddd, MMM D YYYY')}
                   </p>
-                  <p className="mt-1 text-lg font-semibold text-white">
+                  <p className="mt-1 text-base font-semibold text-white sm:text-lg">
                     {session.muscle_groups?.join(', ') || 'Mixed Session'}
                   </p>
                 </div>
                 <div className="text-left sm:text-right">
-                  <p className="font-display text-3xl font-bold text-accent">{Math.round(session.total_volume || 0)}kg</p>
+                  <p className="font-display text-2xl font-bold text-accent sm:text-3xl">{Math.round(session.total_volume || 0)}kg</p>
                   <p className="text-xs text-zinc-400">{session.exercises?.length || 0} sets logged</p>
                 </div>
               </button>

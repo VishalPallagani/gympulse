@@ -21,7 +21,7 @@ function MetricPill({ label, value, tone = 'text-white' }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-2">
       <p className="text-[10px] uppercase tracking-[0.18em] text-zinc-400">{label}</p>
-      <p className={`mt-1 font-display text-xl font-semibold ${tone}`}>{value}</p>
+      <p className={`mt-1 font-display text-lg font-semibold sm:text-xl ${tone}`}>{value}</p>
     </div>
   );
 }
@@ -37,12 +37,12 @@ export default function BodyWeightChart({ bodyWeight, coachInsights }) {
 
   if (!series.length) {
     return (
-      <section id="bodyweight" className="apple-card p-6">
-        <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Bodyweight Trend</h2>
+      <section id="bodyweight" className="apple-card p-4 sm:p-6">
+        <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Bodyweight Trend</h2>
         <p className="mt-2 text-sm text-zinc-400">
           Send a daily check-in like <span className="text-white">'weight 78.4kg'</span> to unlock trend, adherence, and cut/bulk signal.
         </p>
-        <div className="mt-5 rounded-2xl border border-dashed border-white/20 bg-black/25 p-5">
+        <div className="mt-5 rounded-2xl border border-dashed border-white/20 bg-black/25 p-4 sm:p-5">
           <p className="text-zinc-300">No bodyweight logs yet.</p>
           <p className="mt-2 text-sm text-zinc-400">
             Coach tip: morning, post-bathroom, pre-meal weigh-ins produce the cleanest trendline.
@@ -53,10 +53,10 @@ export default function BodyWeightChart({ bodyWeight, coachInsights }) {
   }
 
   return (
-    <section id="bodyweight" className="apple-card p-6">
+    <section id="bodyweight" className="apple-card p-4 sm:p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Bodyweight Trend</h2>
+          <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Bodyweight Trend</h2>
           <p className="mt-1 text-sm text-zinc-400">Daily scale trend from WhatsApp check-ins.</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-2">
@@ -69,7 +69,7 @@ export default function BodyWeightChart({ bodyWeight, coachInsights }) {
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-5">
+      <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 xl:grid-cols-5">
         <MetricPill label="Latest" value={`${Number(latest).toFixed(1)}kg`} tone="text-accent" />
         <MetricPill
           label="Vs Last Log"
@@ -85,18 +85,18 @@ export default function BodyWeightChart({ bodyWeight, coachInsights }) {
         <MetricPill label="30-Day Adherence" value={`${Math.round(Number(adherence) || 0)}%`} tone="text-mint" />
       </div>
 
-      <div className="mt-6 h-80 w-full">
+      <div className="mt-6 h-64 w-full sm:h-80">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={series} margin={{ top: 8, right: 16, left: -12, bottom: 4 }}>
             <defs>
               <linearGradient id="weightFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#A78BFA" stopOpacity={0.42} />
-                <stop offset="95%" stopColor="#A78BFA" stopOpacity={0.03} />
+                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.42} />
+                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.03} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
-            <XAxis dataKey="date" tickFormatter={formatDate} stroke="#A1A1AA" tick={{ fontSize: 12 }} />
-            <YAxis stroke="#A1A1AA" tick={{ fontSize: 12 }} unit="kg" domain={['dataMin - 1', 'dataMax + 1']} />
+            <XAxis dataKey="date" tickFormatter={formatDate} stroke="#A1A1AA" tick={{ fontSize: 11 }} minTickGap={24} />
+            <YAxis stroke="#A1A1AA" tick={{ fontSize: 11 }} unit="kg" domain={['dataMin - 1', 'dataMax + 1']} />
             <Tooltip
               contentStyle={{
                 background: 'rgba(7,10,16,0.96)',
@@ -111,10 +111,10 @@ export default function BodyWeightChart({ bodyWeight, coachInsights }) {
             <Line
               type="monotone"
               dataKey="weight_kg"
-              stroke="#A78BFA"
+              stroke="#8B5CF6"
               strokeWidth={3}
-              dot={{ r: 2, fill: '#A78BFA' }}
-              activeDot={{ r: 5, fill: '#5AC8FA' }}
+              dot={{ r: 2, fill: '#8B5CF6' }}
+              activeDot={{ r: 5, fill: '#22D3EE' }}
             />
           </AreaChart>
         </ResponsiveContainer>

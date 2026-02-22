@@ -29,8 +29,8 @@ export default function RadarChart({ radarData }) {
 
   if (!hasVolume) {
     return (
-      <section id="radar" className="apple-card p-6">
-        <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Muscle Balance</h2>
+      <section id="radar" className="apple-card p-4 sm:p-6">
+        <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Muscle Balance</h2>
         <p className="mt-4 text-zinc-400">Train more groups to reveal your 30-day balance profile.</p>
       </section>
     );
@@ -39,12 +39,12 @@ export default function RadarChart({ radarData }) {
   const { top, bottom } = topAndBottomGroups(data);
 
   return (
-    <section id="radar" className="apple-card p-6">
-      <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Muscle Balance (30d)</h2>
+    <section id="radar" className="apple-card p-4 sm:p-6">
+      <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Muscle Balance (30d)</h2>
       <p className="mt-1 text-sm text-zinc-400">Radar profile of volume distribution across major muscle groups.</p>
 
       <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[1.2fr_1fr]">
-        <div className="h-80">
+        <div className="h-72 sm:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <RechartsRadarChart data={data}>
               <PolarGrid stroke="rgba(255,255,255,0.12)" />
@@ -61,8 +61,8 @@ export default function RadarChart({ radarData }) {
               <Radar
                 name="Volume"
                 dataKey="volume"
-                stroke="#5AC8FA"
-                fill="#5AC8FA"
+                stroke="#FF4FD8"
+                fill="#FF4FD8"
                 fillOpacity={0.34}
                 strokeWidth={2}
               />

@@ -1,14 +1,14 @@
-import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const COLORS = {
-  Chest: '#5AC8FA',
-  Back: '#34D399',
-  Shoulders: '#A78BFA',
-  Biceps: '#F59E0B',
+  Chest: '#FF4FD8',
+  Back: '#2EE6A6',
+  Shoulders: '#8B5CF6',
+  Biceps: '#FFB703',
   Triceps: '#FB7185',
   Legs: '#22D3EE',
-  Core: '#C4B5FD',
-  Cardio: '#60A5FA',
+  Core: '#C084FC',
+  Cardio: '#38BDF8',
   'Full Body': '#F97316'
 };
 
@@ -22,23 +22,23 @@ function formatWeek(value) {
 export default function VolumeChart({ weeklyVolume }) {
   if (!weeklyVolume?.length) {
     return (
-      <section id="volume" className="apple-card p-6">
-        <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Weekly Volume</h2>
+      <section id="volume" className="apple-card p-4 sm:p-6">
+        <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Weekly Volume</h2>
         <p className="mt-4 text-zinc-400">Log sessions to see your stacked muscle-group volume profile.</p>
       </section>
     );
   }
 
   return (
-    <section id="volume" className="apple-card p-6">
-      <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Weekly Volume Intelligence</h2>
+    <section id="volume" className="apple-card p-4 sm:p-6">
+      <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Weekly Volume Intelligence</h2>
       <p className="mt-1 text-sm text-zinc-400">Stacked muscle contribution with total weekly trend overlay.</p>
-      <div className="mt-6 h-[24rem] w-full">
+      <div className="mt-6 h-72 w-full sm:h-[24rem]">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={weeklyVolume} margin={{ top: 8, right: 18, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
-            <XAxis dataKey="week_start" stroke="#A1A1AA" tickFormatter={formatWeek} tick={{ fontSize: 12 }} />
-            <YAxis stroke="#A1A1AA" tick={{ fontSize: 12 }} unit="kg" />
+            <XAxis dataKey="week_start" stroke="#A1A1AA" tickFormatter={formatWeek} tick={{ fontSize: 11 }} minTickGap={20} />
+            <YAxis stroke="#A1A1AA" tick={{ fontSize: 11 }} unit="kg" />
             <Tooltip
               contentStyle={{
                 background: 'rgba(7,10,16,0.96)',
@@ -47,7 +47,6 @@ export default function VolumeChart({ weeklyVolume }) {
               }}
               labelFormatter={(value) => `Week of ${formatWeek(value)}`}
             />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
             {MUSCLE_KEYS.map((key) => (
               <Bar key={key} dataKey={key} stackId="weekly" fill={COLORS[key]} radius={[4, 4, 0, 0]} />
             ))}
@@ -61,6 +60,15 @@ export default function VolumeChart({ weeklyVolume }) {
             />
           </ComposedChart>
         </ResponsiveContainer>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-zinc-300">
+        {MUSCLE_KEYS.map((key) => (
+          <span key={key} className="inline-flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[key] }} />
+            {key}
+          </span>
+        ))}
       </div>
     </section>
   );

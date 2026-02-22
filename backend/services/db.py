@@ -283,12 +283,13 @@ async def get_or_create_user_silent(phone_number: str, name: str | None = None) 
 
     if existing:
         user = existing[0]
-        if name and not user.get("name"):
+        desired_name = name.strip()[:80] if name else ""
+        if desired_name and desired_name != str(user.get("name") or ""):
             updated_rows = await _request(
                 "PATCH",
                 "users",
                 params={"id": f"eq.{user['id']}"},
-                payload={"name": name.strip()[:80]},
+                payload={"name": desired_name},
                 return_representation=True,
             )
             if updated_rows:
@@ -307,8 +308,8 @@ async def get_or_create_user_silent(phone_number: str, name: str | None = None) 
     return created[0], True
 
 
-async def get_or_create_user(phone_number: str) -> tuple[dict[str, Any], bool]:
-    user, is_new = await get_or_create_user_silent(phone_number)
+async def get_or_create_user(phone_number: str, name: str | None = None) -> tuple[dict[str, Any], bool]:
+    user, is_new = await get_or_create_user_silent(phone_number, name=name)
     if not is_new:
         return user, False
 
@@ -794,7 +795,8 @@ def _weekly_volume(sets_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _progress_data(sets_rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
-    progress: dict[str, dict[str, float]] = defaultdict(dict)
+    # Daily progression per exercise. We track max load and same-day volume.
+    progress: dict[str, dict[str, dict[str, float]]] = defaultdict(lambda: defaultdict(lambda: {"max_weight": 0.0, "volume_kg": 0.0}))
 
     for row in sets_rows:
         weight = _to_float(row.get("weight_kg"))
@@ -806,12 +808,24 @@ def _progress_data(sets_rows: list[dict[str, Any]]) -> dict[str, list[dict[str, 
             continue
 
         day = _parse_dt(row.get("logged_at")).date().isoformat()
-        current_value = progress[exercise].get(day, 0.0)
-        progress[exercise][day] = max(current_value, weight)
+        set_volume = _to_float(row.get("total_volume_kg"))
+        if set_volume is None:
+            set_volume = _calc_volume(weight, _to_int(row.get("reps")), _to_int(row.get("sets_count")))
+
+        bucket = progress[exercise][day]
+        bucket["max_weight"] = max(bucket.get("max_weight", 0.0), weight)
+        bucket["volume_kg"] = round(bucket.get("volume_kg", 0.0) + max(set_volume, 0.0), 2)
 
     output: dict[str, list[dict[str, Any]]] = {}
     for exercise, day_map in progress.items():
-        points = [{"date": day, "max_weight": value} for day, value in sorted(day_map.items())]
+        points = [
+            {
+                "date": day,
+                "max_weight": round(values.get("max_weight", 0.0), 2),
+                "volume_kg": round(values.get("volume_kg", 0.0), 2),
+            }
+            for day, values in sorted(day_map.items())
+        ]
         output[exercise] = points
 
     return output

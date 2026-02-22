@@ -95,7 +95,7 @@ async def _send_dashboard_paywall(phone_number: str, user: dict[str, Any]) -> No
     link_block = payment_link if payment_link else "Payment link is temporarily unavailable. Please try again shortly."
     message = (
         "Your dashboard is a Pro feature \U0001F4CA\n\n"
-        "Unlock beautiful charts, story cards and progress tracking for just \u20B999/month \U0001F447\n\n"
+        "Unlock beautiful charts, share drops and progress tracking for just \u20B999/month \U0001F447\n\n"
         f"{link_block}\n\n"
         "Your workouts are already being tracked - you just need to unlock the view \U0001F513"
     )
@@ -107,7 +107,7 @@ async def _send_story_paywall(phone_number: str, user: dict[str, Any]) -> None:
     link_block = payment_link if payment_link else "Payment link is temporarily unavailable. Please try again shortly."
     message = (
         "Your dashboard is a Pro feature \U0001F4CA\n\n"
-        "Unlock beautiful charts, weekly stories and medals for just \u20B999/month \U0001F447\n\n"
+        "Unlock beautiful charts, weekly share drops and medals for just \u20B999/month \U0001F447\n\n"
         f"{link_block}\n\n"
         "Your workouts are already being tracked - you just need to unlock the view \U0001F513"
     )
@@ -304,8 +304,8 @@ async def _handle_workout(phone_number: str, user_id: str, raw_text: str, exerci
     await send_text(phone_number, "\n".join(lines))
 
 
-async def _handle_text_message(phone_number: str, message_text: str) -> None:
-    user, _ = await get_or_create_user(phone_number)
+async def _handle_text_message(phone_number: str, message_text: str, display_name: str | None = None) -> None:
+    user, _ = await get_or_create_user(phone_number, name=display_name)
     user_id = user["id"]
     normalized = message_text.lower().strip()
     should_prompt_weight = True
@@ -373,6 +373,14 @@ async def receive_webhook(payload: dict[str, Any]) -> dict[str, str]:
         changes = entry.get("changes", [])
         for change in changes:
             value = change.get("value", {})
+            contacts = value.get("contacts", []) or []
+            contact_name_by_phone: dict[str, str] = {}
+            for contact in contacts:
+                wa_id = "".join(char for char in str(contact.get("wa_id", "")) if char.isdigit())
+                profile_name = str((contact.get("profile") or {}).get("name") or "").strip()
+                if wa_id and profile_name:
+                    contact_name_by_phone[wa_id] = profile_name
+
             for message in value.get("messages", []):
                 phone_number = message.get("from")
                 msg_type = message.get("type")
@@ -392,7 +400,12 @@ async def receive_webhook(payload: dict[str, Any]) -> dict[str, str]:
                     continue
 
                 try:
-                    await _handle_text_message(phone_number, text_body)
+                    normalized_phone = "".join(char for char in str(phone_number) if char.isdigit())
+                    await _handle_text_message(
+                        phone_number,
+                        text_body,
+                        display_name=contact_name_by_phone.get(normalized_phone),
+                    )
                 except Exception:
                     logger.exception("Failed to handle incoming WhatsApp message")
                     await send_text(

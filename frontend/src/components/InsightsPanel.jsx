@@ -21,9 +21,9 @@ function formatPercent(value) {
 
 function ScoreCard({ label, value }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-2xl border border-white/10 bg-black/25 p-3 sm:p-4">
       <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{label}</p>
-      <p className={`mt-2 font-display text-4xl font-bold ${scoreTone(Number(value) || 0)}`}>{value}</p>
+      <p className={`mt-2 font-display text-3xl font-bold sm:text-4xl ${scoreTone(Number(value) || 0)}`}>{value}</p>
       <div className="mt-3 h-1.5 rounded-full bg-white/10">
         <div
           className="h-1.5 rounded-full bg-gradient-to-r from-cyan via-accent to-violet"
@@ -36,9 +36,9 @@ function ScoreCard({ label, value }) {
 
 function MetaRow({ label, value, tone = 'text-zinc-100' }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm">
+    <div className="flex items-start justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs sm:items-center sm:text-sm">
       <span className="text-zinc-400">{label}</span>
-      <span className={`font-medium ${tone}`}>{value}</span>
+      <span className={`text-right font-medium ${tone}`}>{value}</span>
     </div>
   );
 }
@@ -49,14 +49,14 @@ export default function InsightsPanel({ coachInsights, bodyWeight }) {
   const recommendation = insights.recommendation || 'Log more sessions to unlock personalized recommendations.';
 
   return (
-    <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_1fr]" id="insights">
-      <article className="apple-card p-6">
+    <section className="grid grid-cols-1 gap-3 sm:gap-4 xl:grid-cols-[1.2fr_1fr]" id="insights">
+      <article className="apple-card p-4 sm:p-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-zinc-400">Coach Dashboard</p>
-            <h2 className="mt-1 font-display text-3xl font-semibold text-white md:text-4xl">Performance Signals</h2>
+            <h2 className="mt-1 font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">Performance Signals</h2>
           </div>
-          <p className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs uppercase tracking-[0.16em] text-zinc-400">
+          <p className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-[10px] uppercase tracking-[0.12em] text-zinc-400 sm:text-xs sm:tracking-[0.16em]">
             Last 30 days
           </p>
         </div>
@@ -77,7 +77,7 @@ export default function InsightsPanel({ coachInsights, bodyWeight }) {
         </div>
       </article>
 
-      <article className="apple-card p-6">
+      <article className="apple-card p-4 sm:p-6">
         <p className="text-xs uppercase tracking-[0.22em] text-zinc-400">Action Plan</p>
         <p className="mt-3 rounded-2xl border border-accent/30 bg-accent/10 px-4 py-3 text-sm leading-relaxed text-zinc-100">
           {recommendation}
