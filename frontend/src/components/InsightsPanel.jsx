@@ -19,10 +19,26 @@ function formatPercent(value) {
   return `${parsed > 0 ? '+' : ''}${parsed.toFixed(1)}%`;
 }
 
-function ScoreCard({ label, value }) {
+function InfoTip({ text }) {
+  return (
+    <button
+      type="button"
+      className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/20 bg-white/5 text-[10px] font-bold text-zinc-300 transition hover:border-accent/60 hover:text-accent"
+      title={text}
+      aria-label={text}
+    >
+      i
+    </button>
+  );
+}
+
+function ScoreCard({ label, value, helpText }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-black/25 p-3 sm:p-4">
-      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{label}</p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{label}</p>
+        <InfoTip text={helpText} />
+      </div>
       <p className={`mt-2 font-display text-3xl font-bold sm:text-4xl ${scoreTone(Number(value) || 0)}`}>{value}</p>
       <div className="mt-3 h-1.5 rounded-full bg-white/10">
         <div
@@ -62,9 +78,21 @@ export default function InsightsPanel({ coachInsights, bodyWeight }) {
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
-          <ScoreCard label="Consistency" value={insights.consistency_score || 0} />
-          <ScoreCard label="Progression" value={insights.progression_score || 0} />
-          <ScoreCard label="Balance" value={insights.balance_score || 0} />
+          <ScoreCard
+            label="Consistency"
+            value={insights.consistency_score || 0}
+            helpText="How regularly you train week to week, with streak stability included."
+          />
+          <ScoreCard
+            label="Progression"
+            value={insights.progression_score || 0}
+            helpText="How many tracked exercises improved load versus their previous logged day."
+          />
+          <ScoreCard
+            label="Balance"
+            value={insights.balance_score || 0}
+            helpText="How evenly your training volume is distributed across major muscle groups."
+          />
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">

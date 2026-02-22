@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
 from typing import Any
@@ -38,6 +39,42 @@ MUSCLE_GROUPS = [
     "Cardio",
     "Full Body",
 ]
+
+EXERCISE_CANONICAL_MAP = {
+    "bench": "Bench Press",
+    "bench press": "Bench Press",
+    "benchpress": "Bench Press",
+    "flat bench": "Bench Press",
+    "flat bench press": "Bench Press",
+    "bb bench": "Bench Press",
+    "barbell bench": "Bench Press",
+    "barbell bench press": "Bench Press",
+    "incline bench": "Incline Bench Press",
+    "incline bench press": "Incline Bench Press",
+    "incline db press": "Incline Dumbbell Press",
+    "incline dumbbell press": "Incline Dumbbell Press",
+    "deadlift": "Deadlift",
+    "dl": "Deadlift",
+    "rdl": "Romanian Deadlift",
+    "romanian deadlift": "Romanian Deadlift",
+    "squat": "Squat",
+    "back squat": "Squat",
+    "front squat": "Front Squat",
+    "ohp": "Overhead Press",
+    "overhead press": "Overhead Press",
+    "shoulder press": "Overhead Press",
+    "military press": "Overhead Press",
+    "pullup": "Pull Up",
+    "pullups": "Pull Up",
+    "pull up": "Pull Up",
+    "pull ups": "Pull Up",
+    "chinup": "Chin Up",
+    "chin up": "Chin Up",
+    "pushup": "Push Up",
+    "push up": "Push Up",
+    "lat pulldown": "Lat Pulldown",
+    "lat pull down": "Lat Pulldown",
+}
 
 MEDAL_DEFINITIONS = [
     {
@@ -212,7 +249,16 @@ def _to_int(value: Any) -> int | None:
 
 
 def _normalize_exercise_name(name: str) -> str:
-    return " ".join(word.capitalize() for word in str(name).strip().split())
+    cleaned = " ".join(str(name).strip().split())
+    if not cleaned:
+        return ""
+
+    normalized_key = re.sub(r"[^a-z0-9]+", " ", cleaned.lower()).strip()
+    canonical = EXERCISE_CANONICAL_MAP.get(normalized_key)
+    if canonical:
+        return canonical
+
+    return " ".join(word.capitalize() for word in cleaned.split())
 
 
 def _calc_volume(weight_kg: float | None, reps: int | None, sets_count: int | None) -> float:
@@ -1070,13 +1116,38 @@ def _build_coach_insights(
     if len(weekly_totals) >= 2:
         weekly_trend = _percent_change(weekly_totals[-1], weekly_totals[-2])
 
-    radar_sorted = sorted(radar_30d, key=lambda item: _to_float(item.get("volume")) or 0.0, reverse=True)
-    top_muscle_group = radar_sorted[0].get("muscle_group") if radar_sorted else "N/A"
-    undertrained_groups = [item.get("muscle_group") for item in radar_sorted if (_to_float(item.get("volume")) or 0) <= 0]
-    undertrained_groups = [group for group in undertrained_groups if group]
-
     totals_by_group = {str(item.get("muscle_group")): max(_to_float(item.get("volume")) or 0.0, 0.0) for item in radar_30d}
     total_30d_volume = sum(totals_by_group.values())
+    radar_sorted = sorted(radar_30d, key=lambda item: _to_float(item.get("volume")) or 0.0, reverse=True)
+    top_muscle_group = radar_sorted[0].get("muscle_group") if radar_sorted else "N/A"
+
+    avg_group_volume = (total_30d_volume / len(MUSCLE_GROUPS)) if MUSCLE_GROUPS else 0.0
+    undertrained_threshold = max(avg_group_volume * 0.6, 1.0)
+    undertrained_groups = [
+        group
+        for group in sorted(
+            MUSCLE_GROUPS,
+            key=lambda group: (
+                0 if totals_by_group.get(group, 0.0) <= 0 else 1,
+                0 if group == "Legs" else 1,
+                totals_by_group.get(group, 0.0),
+            ),
+        )
+        if totals_by_group.get(group, 0.0) <= undertrained_threshold and group != top_muscle_group
+    ]
+    if not undertrained_groups:
+        undertrained_groups = [
+            group
+            for group in sorted(
+                MUSCLE_GROUPS,
+                key=lambda group: (
+                    0 if group == "Legs" else 1,
+                    totals_by_group.get(group, 0.0),
+                ),
+            )
+            if group != top_muscle_group
+        ][:3]
+
     leg_share_pct = round(((totals_by_group.get("Legs", 0.0) / total_30d_volume) * 100), 1) if total_30d_volume > 0 else 0.0
 
     push_volume = totals_by_group.get("Chest", 0.0) + totals_by_group.get("Shoulders", 0.0) + totals_by_group.get("Triceps", 0.0)
@@ -1101,7 +1172,7 @@ def _build_coach_insights(
         "sessions_28d": sessions_28d,
         "weekly_volume_trend_pct": weekly_trend,
         "top_muscle_group_30d": top_muscle_group,
-        "undertrained_groups": undertrained_groups[:4],
+        "undertrained_groups": undertrained_groups[:6],
         "tracked_exercises": progression["tracked_exercises"],
         "improving_exercises": progression["improving_exercises"],
         "best_progression_exercise": progression["best_exercise"],

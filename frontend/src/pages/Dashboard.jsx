@@ -27,6 +27,22 @@ const NAV_ITEMS = [
   { id: 'story', label: 'Share' }
 ];
 
+function formatShortDate(value) {
+  if (!value) {
+    return 'Latest';
+  }
+  const date = new Date(value);
+  const now = new Date();
+  const isToday =
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate();
+  if (isToday) {
+    return 'Today';
+  }
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
 function ScrollNav({ mobile = false }) {
   return (
     <nav
@@ -208,6 +224,42 @@ export default function Dashboard() {
   const summary = stats?.summary;
   const sessionCount = useMemo(() => exerciseData?.history?.length || 0, [exerciseData]);
   const athleteName = dashboardData?.user?.name?.trim() || null;
+  const athleteDisplayName = athleteName || 'Athlete';
+
+  const dailyBrief = useMemo(() => {
+    const latest = stats?.recent_sessions?.[0];
+    if (!latest) {
+      return null;
+    }
+
+    const exerciseRows = Array.isArray(latest.exercises) ? latest.exercises : [];
+    const movementNames = Array.from(new Set(exerciseRows.map((row) => row.exercise_name).filter(Boolean)));
+    const topLift = exerciseRows.reduce(
+      (best, row) => {
+        const currentWeight = Number(row?.weight_kg || 0);
+        if (currentWeight > best.weight) {
+          return { weight: currentWeight, name: row.exercise_name || 'Top Lift' };
+        }
+        return best;
+      },
+      { weight: 0, name: '' }
+    );
+
+    return {
+      dateLabel: formatShortDate(latest.logged_at),
+      muscleSummary: (latest.muscle_groups || []).join(' | ') || 'Mixed session',
+      totalVolume: Math.round(Number(latest.total_volume || 0)),
+      movementCount: movementNames.length || exerciseRows.length || 0,
+      topLift: topLift.weight > 0 ? `${topLift.name} ${topLift.weight.toFixed(1)}kg` : null
+    };
+  }, [stats?.recent_sessions]);
+
+  const coachInsights = stats?.coach_insights || {};
+  const weeklyTrend = coachInsights.weekly_volume_trend_pct;
+  const trendLabel =
+    weeklyTrend === null || weeklyTrend === undefined
+      ? 'No weekly trend yet'
+      : `${weeklyTrend > 0 ? '+' : ''}${Number(weeklyTrend).toFixed(1)}% weekly volume`;
 
   if (loading) {
     return <LoadingSkeleton />;
@@ -241,16 +293,50 @@ export default function Dashboard() {
           <header className="apple-card relative overflow-hidden p-5 sm:p-6">
             <div className="absolute -right-8 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-accent/18 blur-2xl" />
             <div className="absolute -left-12 -top-10 h-44 w-44 rounded-full bg-violet/25 blur-3xl" />
-            <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400 sm:text-xs sm:tracking-[0.28em]">Athlete Intelligence</p>
-            <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
-              Performance Command Center
-            </h1>
-            <p className="mt-3 text-sm text-zinc-300 sm:text-base">
-              Athlete {athleteName || dashboardData.user?.phone_number || 'Unknown'} | {sessionCount} total sets logged
+            <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400 sm:text-xs sm:tracking-[0.28em]">
+              GymPulse | Athlete Intelligence
             </p>
+            <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
+              <span className="bg-gradient-to-r from-accent via-cyan to-violet bg-clip-text text-transparent">
+                {athleteDisplayName}
+              </span>
+              <span className="text-white">'s Performance Command Center</span>
+            </h1>
             <p className="mt-2 text-sm text-zinc-400">
               Coach-grade telemetry from simple WhatsApp messages: training stress, progression, bodyweight trend, and balance.
             </p>
+
+            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-[1.25fr_1fr]">
+              <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Daily Training Brief</p>
+                {dailyBrief ? (
+                  <>
+                    <p className="mt-2 text-sm font-medium text-zinc-100">
+                      {dailyBrief.dateLabel}: {dailyBrief.muscleSummary}
+                    </p>
+                    <p className="mt-2 text-sm text-zinc-300">
+                      {dailyBrief.totalVolume.toLocaleString()} kg moved across {dailyBrief.movementCount} movements.
+                      {dailyBrief.topLift ? ` Top lift: ${dailyBrief.topLift}.` : ''}
+                    </p>
+                  </>
+                ) : (
+                  <p className="mt-2 text-sm text-zinc-300">No workout logged yet. Send your first session on WhatsApp to generate your brief.</p>
+                )}
+              </article>
+
+              <article className="rounded-2xl border border-accent/25 bg-accent/10 p-4">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-200">Key Insights</p>
+                <p className="mt-2 text-sm text-zinc-100">{coachInsights.recommendation || 'Keep logging workouts to unlock coaching insights.'}</p>
+                <p className="mt-2 text-xs text-zinc-300">
+                  {trendLabel} | Data points: {sessionCount} logged sets
+                </p>
+                {coachInsights.best_progression_exercise ? (
+                  <p className="mt-1 text-xs text-zinc-300">
+                    Best lift trend: {coachInsights.best_progression_exercise} (+{Number(coachInsights.best_progression_delta_kg || 0).toFixed(1)}kg)
+                  </p>
+                ) : null}
+              </article>
+            </div>
           </header>
 
           <OverviewCards summary={summary} quickStats={stats.quick_stats} />
