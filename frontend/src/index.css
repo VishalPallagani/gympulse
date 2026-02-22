@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #f8fafc;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(90, 200, 250, 0.2), transparent 34%),
+    radial-gradient(circle at 88% 10%, rgba(167, 139, 250, 0.16), transparent 34%),
+    radial-gradient(circle at 80% 86%, rgba(249, 115, 22, 0.13), transparent 36%),
+    radial-gradient(circle at 44% 120%, rgba(52, 211, 153, 0.12), transparent 38%),
+    #04050a;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.02), transparent 40%, rgba(255, 255, 255, 0.01));
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.06), transparent 52%);
+}
+
+.grid-noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.017) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.017) 1px, transparent 1px);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+
+.glass-panel {
+  background: linear-gradient(165deg, rgba(19, 25, 39, 0.88), rgba(13, 17, 24, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  backdrop-filter: blur(18px);
+}
+
+.apple-card {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(145deg, rgba(21, 29, 43, 0.86), rgba(10, 13, 21, 0.84));
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.52),
+    0 0 0 1px rgba(255, 255, 255, 0.015) inset,
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+}
+
+.soft-ring {
+  position: relative;
+  overflow: hidden;
+}
+
+.soft-ring::after {
+  content: '';
+  position: absolute;
+  inset: -65% auto auto -35%;
+  width: 70%;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, rgba(90, 200, 250, 0.18), transparent 72%);
+  pointer-events: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(90, 200, 250, 0.45);
+  border-radius: 9999px;
+}
+
+.fade-seq > * {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 0.48s ease forwards;
+}
+
+.fade-seq > *:nth-child(1) {
+  animation-delay: 0.04s;
+}
+
+.fade-seq > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.fade-seq > *:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+.fade-seq > *:nth-child(4) {
+  animation-delay: 0.16s;
+}
+
+.fade-seq > *:nth-child(5) {
+  animation-delay: 0.2s;
+}
+
+.fade-seq > *:nth-child(6) {
+  animation-delay: 0.24s;
+}
+
+.fade-seq > *:nth-child(7) {
+  animation-delay: 0.28s;
+}
+
+.fade-seq > *:nth-child(8) {
+  animation-delay: 0.32s;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
