@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+
 function scoreTone(score) {
   if (score >= 75) {
     return 'text-mint';
@@ -20,15 +22,47 @@ function formatPercent(value) {
 }
 
 function InfoTip({ text }) {
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
-    <button
-      type="button"
-      className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/20 bg-white/5 text-[10px] font-bold text-zinc-300 transition hover:border-accent/60 hover:text-accent"
-      title={text}
-      aria-label={text}
-    >
-      i
-    </button>
+    <span ref={wrapperRef} className="relative inline-flex">
+      <button
+        type="button"
+        className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/20 bg-white/5 text-[10px] font-bold text-zinc-300 transition hover:border-accent/60 hover:text-accent"
+        aria-label={text}
+        aria-expanded={open}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onClick={(event) => {
+          event.stopPropagation();
+          setOpen((previous) => !previous);
+        }}
+      >
+        i
+      </button>
+      <span
+        role="tooltip"
+        className={`pointer-events-none absolute right-0 top-7 z-20 w-56 rounded-lg border border-white/15 bg-[#0D111A] px-3 py-2 text-[11px] leading-relaxed text-zinc-200 shadow-card transition ${
+          open ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'
+        }`}
+      >
+        {text}
+      </span>
+    </span>
   );
 }
 

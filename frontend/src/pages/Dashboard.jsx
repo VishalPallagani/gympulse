@@ -76,7 +76,7 @@ function LoadingSkeleton() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-ink p-4 text-white sm:p-6">
       <div className="grid-noise absolute inset-0" />
-      <div className="relative mx-auto max-w-7xl space-y-6">
+      <div className="relative mx-auto max-w-[1700px] space-y-6">
         <div className="h-36 animate-pulse rounded-3xl bg-white/5 sm:h-44" />
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
@@ -286,7 +286,7 @@ export default function Dashboard() {
       <div className="pointer-events-none absolute -left-16 top-10 h-72 w-72 animate-float rounded-full bg-accent/18 blur-3xl" />
       <div className="pointer-events-none absolute bottom-8 right-4 h-72 w-72 animate-float rounded-full bg-violet/18 blur-3xl" />
 
-      <div className="relative mx-auto grid w-full max-w-7xl gap-5 px-3 pb-8 pt-4 sm:px-4 sm:pb-10 sm:pt-6 lg:grid-cols-[250px_1fr] lg:px-6">
+      <div className="relative mx-auto grid w-full max-w-[1700px] gap-5 px-3 pb-8 pt-4 sm:px-4 sm:pb-10 sm:pt-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:px-4 xl:px-5">
         <ScrollNav />
 
         <main className="fade-seq min-w-0 space-y-5 sm:space-y-6">
@@ -294,49 +294,34 @@ export default function Dashboard() {
             <div className="absolute -right-8 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-accent/18 blur-2xl" />
             <div className="absolute -left-12 -top-10 h-44 w-44 rounded-full bg-violet/25 blur-3xl" />
             <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400 sm:text-xs sm:tracking-[0.28em]">
-              GymPulse | Athlete Intelligence
+              GymPulse
             </p>
             <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
-              <span className="bg-gradient-to-r from-accent via-cyan to-violet bg-clip-text text-transparent">
-                {athleteDisplayName}
-              </span>
-              <span className="text-white">'s Performance Command Center</span>
+              Performance Command Center
             </h1>
             <p className="mt-2 text-sm text-zinc-400">
-              Coach-grade telemetry from simple WhatsApp messages: training stress, progression, bodyweight trend, and balance.
+              Athlete {athleteDisplayName} | Coach-grade telemetry from WhatsApp logs.
             </p>
-
-            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-[1.25fr_1fr]">
-              <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Daily Training Brief</p>
-                {dailyBrief ? (
-                  <>
-                    <p className="mt-2 text-sm font-medium text-zinc-100">
-                      {dailyBrief.dateLabel}: {dailyBrief.muscleSummary}
-                    </p>
-                    <p className="mt-2 text-sm text-zinc-300">
-                      {dailyBrief.totalVolume.toLocaleString()} kg moved across {dailyBrief.movementCount} movements.
-                      {dailyBrief.topLift ? ` Top lift: ${dailyBrief.topLift}.` : ''}
-                    </p>
-                  </>
-                ) : (
-                  <p className="mt-2 text-sm text-zinc-300">No workout logged yet. Send your first session on WhatsApp to generate your brief.</p>
-                )}
-              </article>
-
-              <article className="rounded-2xl border border-accent/25 bg-accent/10 p-4">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-200">Key Insights</p>
-                <p className="mt-2 text-sm text-zinc-100">{coachInsights.recommendation || 'Keep logging workouts to unlock coaching insights.'}</p>
+            <article className="mt-5 rounded-2xl border border-accent/25 bg-accent/10 p-4">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-200">Key Insights</p>
+              <p className="mt-2 text-sm text-zinc-100">{coachInsights.recommendation || 'Keep logging workouts to unlock coaching insights.'}</p>
+              {dailyBrief ? (
                 <p className="mt-2 text-xs text-zinc-300">
-                  {trendLabel} | Data points: {sessionCount} logged sets
+                  Latest session ({dailyBrief.dateLabel}): {dailyBrief.muscleSummary} | {dailyBrief.totalVolume.toLocaleString()} kg |{' '}
+                  {dailyBrief.movementCount} movements{dailyBrief.topLift ? ` | Top lift: ${dailyBrief.topLift}` : ''}
                 </p>
-                {coachInsights.best_progression_exercise ? (
-                  <p className="mt-1 text-xs text-zinc-300">
-                    Best lift trend: {coachInsights.best_progression_exercise} (+{Number(coachInsights.best_progression_delta_kg || 0).toFixed(1)}kg)
-                  </p>
-                ) : null}
-              </article>
-            </div>
+              ) : (
+                <p className="mt-2 text-xs text-zinc-300">No workout logged yet. Send your first session on WhatsApp to generate a performance brief.</p>
+              )}
+              <p className="mt-2 text-xs text-zinc-300">
+                {trendLabel} | Data points: {sessionCount} logged sets
+              </p>
+              {coachInsights.best_progression_exercise ? (
+                <p className="mt-1 text-xs text-zinc-300">
+                  Best lift trend: {coachInsights.best_progression_exercise} (+{Number(coachInsights.best_progression_delta_kg || 0).toFixed(1)}kg)
+                </p>
+              ) : null}
+            </article>
           </header>
 
           <OverviewCards summary={summary} quickStats={stats.quick_stats} />
